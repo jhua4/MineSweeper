@@ -18,11 +18,11 @@ namespace MS
 		public mButton(int size)
 		{
 			this.Size = new System.Drawing.Size(size, size);
-			this.BackColor = SystemColors.Control;
+			this.BackColor = SystemColors.ControlDarkDark;
 			this.Font = new Font("Lucida Console", 18, FontStyle.Bold);
 			this.FlatStyle = FlatStyle.Flat;
 			this.FlatAppearance.BorderSize = 1;
-			this.FlatAppearance.BorderColor = Color.Black;
+			this.FlatAppearance.BorderColor = Color.Teal;
 			value = 0;
 		}
 	}

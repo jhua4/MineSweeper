@@ -20,9 +20,12 @@ namespace MS
 
 		const int buttonSize = 30;
 
+		private int topMargin = 40;
+		private int leftMargin = 40;
+
 		private int rows = 16;
 		private int cols = 30;
-		private int bombs = 99;
+		private int bombs = 89;
 		private int flags = 0;
 		private int spacesLeft = 0;
 
@@ -37,19 +40,19 @@ namespace MS
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
-			buttons = new mButton[rows][];
+			buttons = new mButton[cols][];
 
-			for (int i = 0; i < rows; i++)
+			for (int i = 0; i < cols; i++)
 			{
-				buttons[i] = new mButton[cols];
+				buttons[i] = new mButton[rows];
 			}
 
-			for (int i = 0; i < rows; i++)
+			for (int i = 0; i < cols; i++)
 			{
-				for (int j = 0; j < cols; j++)
+				for (int j = 0; j < rows; j++)
 				{
 					mButton m = new mButton(buttonSize);
-					m.Location = new Point(i * buttonSize, j * buttonSize);
+					m.Location = new Point(i * buttonSize + leftMargin, j * buttonSize + topMargin);
 					m.x = i;
 					m.y = j;
 
@@ -57,6 +60,8 @@ namespace MS
 
 					m.MouseDown += ((o, ee) =>
 					{
+						//mButton b = (mButton)o;
+						//MessageBox.Show(b.x.ToString() + " : " + b.y.ToString());
 						if (ee.Button.ToString() == "Left")
 							bClicked = ButtonClicked.Left;
 						else if (ee.Button.ToString() == "Right")
@@ -77,9 +82,9 @@ namespace MS
 			timer1.Stop();
 			sw = new Stopwatch();
 
-			for (int i = 0; i < rows; i++)
+			for (int i = 0; i < cols; i++)
 			{
-				for (int j = 0; j < cols; j++)
+				for (int j = 0; j < rows; j++)
 				{
 					buttons[i][j].Text = "";
 					buttons[i][j].BackColor = SystemColors.ControlDark;
@@ -89,10 +94,10 @@ namespace MS
 				}
 			}
 
-			int[][] matrix = new int[rows][];
-			for (int i = 0; i < rows; i++)
+			int[][] matrix = new int[cols][];
+			for (int i = 0; i < cols; i++)
 			{
-				matrix[i] = new int[cols];
+				matrix[i] = new int[rows];
 			}
 
 			int[] set = new int[rows * cols];
@@ -110,9 +115,9 @@ namespace MS
 				matrix[x_index][y_index] = 1;
 			}
 
-			for (int i = 0; i < rows; i++)
+			for (int i = 0; i < cols; i++)
 			{
-				for (int j = 0; j < cols; j++)
+				for (int j = 0; j < rows; j++)
 				{
 					if (matrix[i][j] == 1)
 					{
@@ -127,25 +132,28 @@ namespace MS
 
 			spacesLeft = rows * cols - bombs;
 
-			for (int i = 0; i < rows; i++)
+			for (int i = 0; i < cols; i++)
 			{
-				for (int j = 0; j < cols; j++)
+				for (int j = 0; j < rows; j++)
 				{
 					if (buttons[i][j].value == 0)
 						spacesLeft--;
 				}
 			}
 
+			spacesLeftLabel.Text = "Spaces Left: " + spacesLeft.ToString();
+
 			firstClick = true;
 			bombsLeftLabel.Text = "Bombs Left: " + bombs.ToString();
 			MessageLabel.Text = "";
+			timerLabel.Text = "00:00";
 		}
 
 		private void MapValues(int[][] matrix)
 		{
-			for (int i = 0; i < rows; i++)
+			for (int i = 0; i < cols; i++)
 			{
-				for (int j = 0; j < cols; j++)
+				for (int j = 0; j < rows; j++)
 				{
 					//MapButtonValue(rows * i + j);
 					if (buttons[i][j].value != -1)
@@ -168,7 +176,7 @@ namespace MS
 						bombCount++;
 					if (matrix[x + 1][y + 1] == 1)
 						bombCount++;
-				} else if (y == cols - 1) //BOTTOM BORDER
+				} else if (y == rows - 1) //BOTTOM BORDER
 				{
 					if (matrix[x][y - 1] == 1)
 						bombCount++;
@@ -190,7 +198,7 @@ namespace MS
 				if (matrix[x + 1][y] == 1)
 					bombCount++;
 			}
-			else if (x == rows - 1) //RIGHT BORDER
+			else if (x == cols - 1) //RIGHT BORDER
 			{
 				if (y == 0) //TOP BORDER
 				{
@@ -199,7 +207,7 @@ namespace MS
 					if (matrix[x - 1][y + 1] == 1)
 						bombCount++;
 				}
-				else if (y == cols - 1) //BOTTOM BORDER
+				else if (y == rows - 1) //BOTTOM BORDER
 				{
 					if (matrix[x][y - 1] == 1)
 						bombCount++;
@@ -231,7 +239,7 @@ namespace MS
 					if (matrix[x - 1][y + 1] == 1)
 						bombCount++;
 				}
-				else if (y == cols - 1) //BOTTOM BORDER
+				else if (y == rows - 1) //BOTTOM BORDER
 				{
 					if (matrix[x][y - 1] == 1)
 						bombCount++;
@@ -278,8 +286,8 @@ namespace MS
 				{
 					found = true;
 
-					int x_index = (int)Math.Floor((double)(value / cols));
-					int y_index = value % cols;
+					int y_index = (int)Math.Floor((double)(value / cols));
+					int x_index = value % cols;
 
 					return new int[3] { x_index, y_index, value };
 				}
@@ -355,9 +363,9 @@ namespace MS
 		{
 			timer1.Stop();
 
-			for (int i = 0; i < rows; i++)
+			for (int i = 0; i < cols; i++)
 			{
-				for (int j = 0; j < cols; j++)
+				for (int j = 0; j < rows; j++)
 				{
 					if (buttons[i][j].value == 0)
 					{
@@ -379,10 +387,10 @@ namespace MS
 
 		private void mapZeroSection(mButton b)
 		{
-			if (b.BackColor == Color.Gray)
+			if (b.BackColor == SystemColors.ControlDarkDark)
 				return;
 
-			b.BackColor = Color.Gray;
+			b.BackColor = SystemColors.ControlDarkDark;
 
 			if (b.x == 0) //LEFT BORDER
 			{
@@ -406,7 +414,7 @@ namespace MS
 						}
 					}
 				}
-				else if (b.y == cols - 1) //BOTTOM BORDER
+				else if (b.y == rows - 1) //BOTTOM BORDER
 				{
 					List<Tuple<int, int>> indices = new List<Tuple<int, int>>();
 					indices.Add(Tuple.Create(b.x, b.y - 1));
@@ -455,7 +463,7 @@ namespace MS
 					setButtonText(buttons[b.x + 1][b.y]);
 					//buttons[b.x + 1][b.y].Text = buttons[b.x + 1][b.y].value.ToString();
 			}
-			else if (b.x == rows - 1) //RIGHT BORDER
+			else if (b.x == cols - 1) //RIGHT BORDER
 			{
 				if (b.y == 0) //TOP BORDER
 				{
@@ -477,7 +485,7 @@ namespace MS
 						}
 					}
 				}
-				else if (b.y == cols - 1) //BOTTOM BORDER
+				else if (b.y == rows - 1) //BOTTOM BORDER
 				{
 					List<Tuple<int, int>> indices = new List<Tuple<int, int>>();
 					indices.Add(Tuple.Create(b.x, b.y - 1));
@@ -549,7 +557,7 @@ namespace MS
 					}
 
 				}
-				else if (b.y == cols - 1) //BOTTOM BORDER
+				else if (b.y == rows - 1) //BOTTOM BORDER
 				{
 					List<Tuple<int, int>> indices = new List<Tuple<int, int>>();
 					indices.Add(Tuple.Create(b.x, b.y - 1));
@@ -652,6 +660,7 @@ namespace MS
 			}
 
 			spacesLeft--;
+			spacesLeftLabel.Text = "Spaces Left: " + spacesLeft.ToString();
 			if (spacesLeft == 0)
 			{
 				wonGame();
@@ -665,9 +674,9 @@ namespace MS
 			MessageLabel.ForeColor = Color.Green;
 			bombsLeftLabel.Text = "Bombs Left: 0";
 
-			for (int i = 0; i < rows; i++)
+			for (int i = 0; i < cols; i++)
 			{
-				for (int j = 0; j < cols; j++)
+				for (int j = 0; j < rows; j++)
 				{
 					if (buttons[i][j].value == 0)
 					{
@@ -705,7 +714,7 @@ namespace MS
 							bombCount++;
 					}
 				}
-				else if (b.y == cols - 1) //BOTTOM BORDER
+				else if (b.y == rows - 1) //BOTTOM BORDER
 				{
 					List<Tuple<int, int>> indices = new List<Tuple<int, int>>();
 					indices.Add(Tuple.Create(b.x, b.y - 1));
@@ -741,7 +750,7 @@ namespace MS
 				else
 					bombCount++;
 			}
-			else if (b.x == rows - 1) //RIGHT BORDER
+			else if (b.x == cols - 1) //RIGHT BORDER
 			{
 				if (b.y == 0) //TOP BORDER
 				{
@@ -757,7 +766,7 @@ namespace MS
 							bombCount++;
 					}
 				}
-				else if (b.y == cols - 1) //BOTTOM BORDER
+				else if (b.y == rows - 1) //BOTTOM BORDER
 				{
 					List<Tuple<int, int>> indices = new List<Tuple<int, int>>();
 					indices.Add(Tuple.Create(b.x, b.y - 1));
@@ -811,7 +820,7 @@ namespace MS
 					}
 
 				}
-				else if (b.y == cols - 1) //BOTTOM BORDER
+				else if (b.y == rows - 1) //BOTTOM BORDER
 				{
 					List<Tuple<int, int>> indices = new List<Tuple<int, int>>();
 					indices.Add(Tuple.Create(b.x, b.y - 1));
@@ -857,6 +866,11 @@ namespace MS
 			}
 
 			b.value = bombCount;
+
+			if (b.value == 0)
+			{
+				mapZeroSection(b);
+			}
 		}
 
 		private void updateButtonToBomb(mButton b)
@@ -878,7 +892,7 @@ namespace MS
 							buttons[t.Item1][t.Item2].value++;
 					}
 				}
-				else if (b.y == cols - 1) //BOTTOM BORDER
+				else if (b.y == rows - 1) //BOTTOM BORDER
 				{
 					List<Tuple<int, int>> indices = new List<Tuple<int, int>>();
 					indices.Add(Tuple.Create(b.x, b.y - 1));
@@ -908,7 +922,7 @@ namespace MS
 				if (buttons[b.x + 1][b.y].value != -1)
 					buttons[b.x + 1][b.y].value++;
 			}
-			else if (b.x == rows - 1) //RIGHT BORDER
+			else if (b.x == cols - 1) //RIGHT BORDER
 			{
 				if (b.y == 0) //TOP BORDER
 				{
@@ -922,7 +936,7 @@ namespace MS
 							buttons[t.Item1][t.Item2].value++;
 					}
 				}
-				else if (b.y == cols - 1) //BOTTOM BORDER
+				else if (b.y == rows - 1) //BOTTOM BORDER
 				{
 					List<Tuple<int, int>> indices = new List<Tuple<int, int>>();
 					indices.Add(Tuple.Create(b.x, b.y - 1));
@@ -968,7 +982,7 @@ namespace MS
 					}
 
 				}
-				else if (b.y == cols - 1) //BOTTOM BORDER
+				else if (b.y == rows - 1) //BOTTOM BORDER
 				{
 					List<Tuple<int, int>> indices = new List<Tuple<int, int>>();
 					indices.Add(Tuple.Create(b.x, b.y - 1));
@@ -1012,9 +1026,9 @@ namespace MS
 			if (b.x == 0 && b.y == 0)
 			{
 				//MessageBox.Show("7");
-				for (int i = 0; i < rows; i++)
+				for (int i = 0; i < cols; i++)
 				{
-					for (int j = 0; j < cols; j++)
+					for (int j = 0; j < rows; j++)
 					{
 						if (buttons[i][j].value != -1)
 						{
@@ -1027,9 +1041,9 @@ namespace MS
 			{
 				if (buttons[0][0].value == -1)
 				{
-					for (int i = 0; i < rows; i++)
+					for (int i = 0; i < cols; i++)
 					{
-						for (int j = 0; j < cols; j++)
+						for (int j = 0; j < rows; j++)
 						{
 							if (buttons[i][j].value != -1)
 							{
@@ -1092,7 +1106,7 @@ namespace MS
 						
 					}
 				}
-				else if (b.y == cols - 1) //BOTTOM BORDER
+				else if (b.y == rows - 1) //BOTTOM BORDER
 				{
 					List<Tuple<int, int>> indices = new List<Tuple<int, int>>();
 					indices.Add(Tuple.Create(b.x, b.y - 1));
@@ -1122,7 +1136,7 @@ namespace MS
 				else if (buttons[b.x + 1][b.y].value != -1)
 					setButtonText(buttons[b.x + 1][b.y]);
 			}
-			else if (b.x == rows - 1) //RIGHT BORDER
+			else if (b.x == cols - 1) //RIGHT BORDER
 			{
 				if (b.y == 0) //TOP BORDER
 				{
@@ -1135,7 +1149,7 @@ namespace MS
 						
 					}
 				}
-				else if (b.y == cols - 1) //BOTTOM BORDER
+				else if (b.y == rows - 1) //BOTTOM BORDER
 				{
 					List<Tuple<int, int>> indices = new List<Tuple<int, int>>();
 					indices.Add(Tuple.Create(b.x, b.y - 1));
@@ -1180,7 +1194,7 @@ namespace MS
 					}
 
 				}
-				else if (b.y == cols - 1) //BOTTOM BORDER
+				else if (b.y == rows - 1) //BOTTOM BORDER
 				{
 					List<Tuple<int, int>> indices = new List<Tuple<int, int>>();
 					indices.Add(Tuple.Create(b.x, b.y - 1));
