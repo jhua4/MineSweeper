@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 
@@ -60,8 +55,6 @@ namespace MS
 
 					m.MouseDown += ((o, ee) =>
 					{
-						//mButton b = (mButton)o;
-						//MessageBox.Show(b.x.ToString() + " : " + b.y.ToString());
 						if (ee.Button.ToString() == "Left")
 							bClicked = ButtonClicked.Left;
 						else if (ee.Button.ToString() == "Right")
@@ -155,7 +148,6 @@ namespace MS
 			{
 				for (int j = 0; j < rows; j++)
 				{
-					//MapButtonValue(rows * i + j);
 					if (buttons[i][j].value != -1)
 					{
 						buttons[i][j].value = MapButtonValue(i, j, matrix);
@@ -320,8 +312,6 @@ namespace MS
 						} else
 						{
 							setButtonText(b);
-							//int value = b.value;
-							//b.Text = value.ToString();
 						}
 					} else
 					{
@@ -409,8 +399,6 @@ namespace MS
 						else if (buttons[t.Item1][t.Item2].value != -1)
 						{
 							setButtonText(buttons[t.Item1][t.Item2]);
-							//int val = buttons[t.Item1][t.Item2].value;
-							//buttons[t.Item1][t.Item2].Text = val.ToString();
 						}
 					}
 				}
@@ -429,8 +417,6 @@ namespace MS
 						else if (buttons[t.Item1][t.Item2].value != -1)
 						{
 							setButtonText(buttons[t.Item1][t.Item2]);
-							//int val = buttons[t.Item1][t.Item2].value;
-							//buttons[t.Item1][t.Item2].Text = val.ToString();
 						}
 					}
 				}
@@ -451,8 +437,6 @@ namespace MS
 						else if (buttons[t.Item1][t.Item2].value != -1)
 						{
 							setButtonText(buttons[t.Item1][t.Item2]);
-							//int val = buttons[t.Item1][t.Item2].value;
-							//buttons[t.Item1][t.Item2].Text = val.ToString();
 						}
 					}
 				}
@@ -461,7 +445,6 @@ namespace MS
 					mapZeroSection(buttons[b.x + 1][b.y]);
 				else if (buttons[b.x + 1][b.y].value != -1)
 					setButtonText(buttons[b.x + 1][b.y]);
-					//buttons[b.x + 1][b.y].Text = buttons[b.x + 1][b.y].value.ToString();
 			}
 			else if (b.x == cols - 1) //RIGHT BORDER
 			{
@@ -480,8 +463,6 @@ namespace MS
 						else if (buttons[t.Item1][t.Item2].value != -1)
 						{
 							setButtonText(buttons[t.Item1][t.Item2]);
-							//int val = buttons[t.Item1][t.Item2].value;
-							//buttons[t.Item1][t.Item2].Text = val.ToString();
 						}
 					}
 				}
@@ -500,8 +481,6 @@ namespace MS
 						else if (buttons[t.Item1][t.Item2].value != -1)
 						{
 							setButtonText(buttons[t.Item1][t.Item2]);
-							//int val = buttons[t.Item1][t.Item2].value;
-							//buttons[t.Item1][t.Item2].Text = val.ToString();
 						}
 					}
 				}
@@ -522,8 +501,6 @@ namespace MS
 						else if (buttons[t.Item1][t.Item2].value != -1)
 						{
 							setButtonText(buttons[t.Item1][t.Item2]);
-							//int val = buttons[t.Item1][t.Item2].value;
-							//buttons[t.Item1][t.Item2].Text = val.ToString();
 						}
 					}
 				}
@@ -532,7 +509,6 @@ namespace MS
 					mapZeroSection(buttons[b.x - 1][b.y]);
 				else if (buttons[b.x - 1][b.y].value != -1)
 					setButtonText(buttons[b.x - 1][b.y]);
-					//buttons[b.x - 1][b.y].Text = buttons[b.x - 1][b.y].value.ToString();
 			}
 			else //NO LEFT/RIGHT BORDER
 			{
@@ -551,8 +527,6 @@ namespace MS
 						} else if (buttons[t.Item1][t.Item2].value != -1)
 						{
 							setButtonText(buttons[t.Item1][t.Item2]);
-							//int val = buttons[t.Item1][t.Item2].value;
-							//buttons[t.Item1][t.Item2].Text = val.ToString();
 						}
 					}
 
@@ -573,8 +547,6 @@ namespace MS
 						else if (buttons[t.Item1][t.Item2].value != -1)
 						{
 							setButtonText(buttons[t.Item1][t.Item2]);
-							//int val = buttons[t.Item1][t.Item2].value;
-							//buttons[t.Item1][t.Item2].Text = val.ToString();
 						}
 					}
 				}
@@ -597,8 +569,6 @@ namespace MS
 						else if (buttons[t.Item1][t.Item2].value != -1)
 						{
 							setButtonText(buttons[t.Item1][t.Item2]);
-							//int val = buttons[t.Item1][t.Item2].value;
-							//buttons[t.Item1][t.Item2].Text = val.ToString();
 						}
 					}
 				}
@@ -607,22 +577,23 @@ namespace MS
 					mapZeroSection(buttons[b.x - 1][b.y]);
 				else if (buttons[b.x - 1][b.y].value != -1)
 					setButtonText(buttons[b.x - 1][b.y]);
-					//buttons[b.x - 1][b.y].Text = buttons[b.x - 1][b.y].value.ToString();
 
 				if (buttons[b.x + 1][b.y].value == 0)
 					mapZeroSection(buttons[b.x + 1][b.y]);
 				else if (buttons[b.x + 1][b.y].value != -1)
 					setButtonText(buttons[b.x + 1][b.y]);
-					//buttons[b.x + 1][b.y].Text = buttons[b.x + 1][b.y].value.ToString();
 			}
 		}
 
 		private void setButtonText(mButton b)
 		{
 			int val = b.value;
-			b.BackColor = SystemColors.ActiveBorder;
-			
 
+			if (b.BackColor == SystemColors.ActiveBorder)
+				return; //button text has already been set
+			else
+				b.BackColor = SystemColors.ActiveBorder;
+			
 			switch (val)
 			{
 				case 1:

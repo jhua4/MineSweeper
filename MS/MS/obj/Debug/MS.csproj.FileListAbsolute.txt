@@ -7,3 +7,12 @@ C:\Users\joshuahua\Documents\MS\MS\obj\Debug\MS.Properties.Resources.resources
 C:\Users\joshuahua\Documents\MS\MS\obj\Debug\MS.csproj.GenerateResource.Cache
 C:\Users\joshuahua\Documents\MS\MS\obj\Debug\MS.exe
 C:\Users\joshuahua\Documents\MS\MS\obj\Debug\MS.pdb
+C:\Users\joshuahua\Documents\MineSweeper\MS\MS\bin\Debug\MS.exe.config
+C:\Users\joshuahua\Documents\MineSweeper\MS\MS\bin\Debug\MS.exe
+C:\Users\joshuahua\Documents\MineSweeper\MS\MS\bin\Debug\MS.pdb
+C:\Users\joshuahua\Documents\MineSweeper\MS\MS\obj\Debug\MS.csprojResolveAssemblyReference.cache
+C:\Users\joshuahua\Documents\MineSweeper\MS\MS\obj\Debug\MS.Form1.resources
+C:\Users\joshuahua\Documents\MineSweeper\MS\MS\obj\Debug\MS.Properties.Resources.resources
+C:\Users\joshuahua\Documents\MineSweeper\MS\MS\obj\Debug\MS.csproj.GenerateResource.Cache
+C:\Users\joshuahua\Documents\MineSweeper\MS\MS\obj\Debug\MS.exe
+C:\Users\joshuahua\Documents\MineSweeper\MS\MS\obj\Debug\MS.pdb
