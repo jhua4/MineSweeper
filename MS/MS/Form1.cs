@@ -20,7 +20,7 @@ namespace MS
 
 		private int rows = 16;
 		private int cols = 30;
-		private int bombs = 89;
+		private int bombs = 99;
 		private int flags = 0;
 		private int spacesLeft = 0;
 
