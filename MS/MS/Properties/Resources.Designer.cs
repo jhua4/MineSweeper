@@ -63,9 +63,9 @@ namespace MS.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Bomb {
+        internal static System.Drawing.Bitmap Flag {
             get {
-                object obj = ResourceManager.GetObject("Bomb", resourceCulture);
+                object obj = ResourceManager.GetObject("Flag", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -73,9 +73,9 @@ namespace MS.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Flag {
+        internal static System.Drawing.Bitmap Mine {
             get {
-                object obj = ResourceManager.GetObject("Flag", resourceCulture);
+                object obj = ResourceManager.GetObject("Mine", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

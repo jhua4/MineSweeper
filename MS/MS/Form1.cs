@@ -20,12 +20,13 @@ namespace MS
 
 		private int rows = 16;
 		private int cols = 30;
-		private int bombs = 99;
+		private int mines = 99;
 		private int flags = 0;
 		private int spacesLeft = 0;
 
 		private mButton[][] buttons;
 
+		//used to show if left/right button was clicked
 		private enum ButtonClicked { Left, Right };
 		ButtonClicked bClicked;
 
@@ -33,6 +34,7 @@ namespace MS
 
 		private Stopwatch sw;
 
+		//creates all buttons and adds handlers
 		private void Form1_Load(object sender, EventArgs e)
 		{
 			buttons = new mButton[cols][];
@@ -67,13 +69,23 @@ namespace MS
 				}
 			}
 
-			newGame();
+			newGame(16, 30, 99);
 		}
 
-		private void newGame()
+		//handles all methods for creating a new game
+		private void newGame(int r, int c, int m)
 		{
+			rows = r;
+			cols = c;
+			mines = m;
+
 			timer1.Stop();
 			sw = new Stopwatch();
+
+			//make all buttons invisible (16x30 is the max number)
+			for (int i = 0; i < 30; i++)
+				for (int j = 0; j < 16; j++)
+					buttons[i][j].Visible = false;
 
 			for (int i = 0; i < cols; i++)
 			{
@@ -84,6 +96,7 @@ namespace MS
 					buttons[i][j].ForeColor = Color.Black;
 					buttons[i][j].Image = null;
 					buttons[i][j].value = 0;
+					buttons[i][j].Visible = true;
 				}
 			}
 
@@ -95,9 +108,9 @@ namespace MS
 
 			int[] set = new int[rows * cols];
 			List<int> currentSet = new List<int>();
-			for (int i = 0; i < bombs; i++)
+			for (int i = 0; i < mines; i++)
 			{
-				int[] result = CreateBombIndex(currentSet, rows * cols);
+				int[] result = CreateMineIndex(currentSet, rows * cols);
 
 				int x_index = result[0];
 				int y_index = result[1];
@@ -123,7 +136,7 @@ namespace MS
 			
 			flags = 0;
 
-			spacesLeft = rows * cols - bombs;
+			spacesLeft = rows * cols - mines;
 
 			for (int i = 0; i < cols; i++)
 			{
@@ -137,11 +150,12 @@ namespace MS
 			spacesLeftLabel.Text = "Spaces Left: " + spacesLeft.ToString();
 
 			firstClick = true;
-			bombsLeftLabel.Text = "Bombs Left: " + bombs.ToString();
+			minesLeftLabel.Text = "Mines Left: " + mines.ToString();
 			MessageLabel.Text = "";
 			timerLabel.Text = "00:00";
 		}
 
+		//set values in grid
 		private void MapValues(int[][] matrix)
 		{
 			for (int i = 0; i < cols; i++)
@@ -156,116 +170,118 @@ namespace MS
 			}
 		}
 
+		//set individual button value
 		private int MapButtonValue(int x, int y, int[][] matrix)
 		{
-			int bombCount = 0;
+			int mineCount = 0;
 
 			if (x == 0) //LEFT BORDER
 			{
 				if (y == 0) //TOP BORDER
 				{
 					if (matrix[x][y + 1] == 1)
-						bombCount++;
+						mineCount++;
 					if (matrix[x + 1][y + 1] == 1)
-						bombCount++;
+						mineCount++;
 				} else if (y == rows - 1) //BOTTOM BORDER
 				{
 					if (matrix[x][y - 1] == 1)
-						bombCount++;
+						mineCount++;
 					if (matrix[x + 1][y - 1] == 1)
-						bombCount++;
+						mineCount++;
 				}
 				else //NO TOP/BOTTOM BORDER
 				{
 					if (matrix[x][y - 1] == 1)
-						bombCount++;
+						mineCount++;
 					if (matrix[x][y + 1] == 1)
-						bombCount++;
+						mineCount++;
 					if (matrix[x + 1][y - 1] == 1)
-						bombCount++;
+						mineCount++;
 					if (matrix[x + 1][y + 1] == 1)
-						bombCount++;
+						mineCount++;
 				}
 
 				if (matrix[x + 1][y] == 1)
-					bombCount++;
+					mineCount++;
 			}
 			else if (x == cols - 1) //RIGHT BORDER
 			{
 				if (y == 0) //TOP BORDER
 				{
 					if (matrix[x][y + 1] == 1)
-						bombCount++;
+						mineCount++;
 					if (matrix[x - 1][y + 1] == 1)
-						bombCount++;
+						mineCount++;
 				}
 				else if (y == rows - 1) //BOTTOM BORDER
 				{
 					if (matrix[x][y - 1] == 1)
-						bombCount++;
+						mineCount++;
 					if (matrix[x - 1][y - 1] == 1)
-						bombCount++;
+						mineCount++;
 				}
 				else //NO TOP/BOTTOM BORDER
 				{
 					if (matrix[x][y - 1] == 1)
-						bombCount++;
+						mineCount++;
 					if (matrix[x][y + 1] == 1)
-						bombCount++;
+						mineCount++;
 					if (matrix[x - 1][y - 1] == 1)
-						bombCount++;
+						mineCount++;
 					if (matrix[x - 1][y + 1] == 1)
-						bombCount++;
+						mineCount++;
 				}
 
 				if (matrix[x - 1][y] == 1)
-					bombCount++;
+					mineCount++;
 			} else //NO LEFT/RIGHT BORDER
 			{
 				if (y == 0) //TOP BORDER
 				{
 					if (matrix[x][y + 1] == 1)
-						bombCount++;
+						mineCount++;
 					if (matrix[x + 1][y + 1] == 1)
-						bombCount++;
+						mineCount++;
 					if (matrix[x - 1][y + 1] == 1)
-						bombCount++;
+						mineCount++;
 				}
 				else if (y == rows - 1) //BOTTOM BORDER
 				{
 					if (matrix[x][y - 1] == 1)
-						bombCount++;
+						mineCount++;
 					if (matrix[x + 1][y - 1] == 1)
-						bombCount++;
+						mineCount++;
 					if (matrix[x - 1][y - 1] == 1)
-						bombCount++;
+						mineCount++;
 				}
 				else //NO TOP/BOTTOM BORDER
 				{
 					if (matrix[x][y - 1] == 1)
-						bombCount++;
+						mineCount++;
 					if (matrix[x][y + 1] == 1)
-						bombCount++;
+						mineCount++;
 					if (matrix[x + 1][y - 1] == 1)
-						bombCount++;
+						mineCount++;
 					if (matrix[x + 1][y + 1] == 1)
-						bombCount++;
+						mineCount++;
 					if (matrix[x - 1][y - 1] == 1)
-						bombCount++;
+						mineCount++;
 					if (matrix[x - 1][y + 1] == 1)
-						bombCount++;
+						mineCount++;
 				}
 
 				if (matrix[x - 1][y] == 1)
-					bombCount++;
+					mineCount++;
 				if (matrix[x + 1][y] == 1)
-					bombCount++;
+					mineCount++;
 			}
 
-			return bombCount;
+			return mineCount;
 		}
 
-		private int[] CreateBombIndex(List<int> exclude, int max)
+		//used to randomly generate mines in grid
+		private int[] CreateMineIndex(List<int> exclude, int max)
 		{
 			bool found = false;
 
@@ -288,6 +304,7 @@ namespace MS
 			return null;
 		}
 
+		//workaround method which basically handles all clicking on buttons
 		private void mButton_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
 		{
 			mButton b = (mButton)sender;
@@ -319,11 +336,11 @@ namespace MS
 						{
 							firstClick = false;
 							moveMine(b);
-							updateButtonFromBomb(b);
+							updateButtonFromMine(b);
 							setButtonText(b);
 						} else
 						{
-							b.Image = (Image)MS.Properties.Resources.ResourceManager.GetObject("Bomb");
+							b.Image = (Image)MS.Properties.Resources.ResourceManager.GetObject("Mine");
 							lostGame();
 						}
 
@@ -336,19 +353,20 @@ namespace MS
 						b.isFlagged = true;
 						b.Image = (Image)MS.Properties.Resources.ResourceManager.GetObject("Flag");
 						flags++;
-						bombsLeftLabel.Text = "Bombs Left: " + (bombs - flags).ToString();
+						minesLeftLabel.Text = "Mines Left: " + (mines - flags).ToString();
 					} else
 					{
 						b.isFlagged = false;
 						b.Image = null;
 						flags--;
-						bombsLeftLabel.Text = "Bombs Left: " + (bombs - flags).ToString();
+						minesLeftLabel.Text = "Mines Left: " + (mines - flags).ToString();
 					}
 
 				}
 			}
 		}
 
+		//show that the user lost and reveal all spaces
 		private void lostGame()
 		{
 			timer1.Stop();
@@ -366,7 +384,7 @@ namespace MS
 						setButtonText(buttons[i][j]);
 					} else
 					{
-						buttons[i][j].Image = (Image)MS.Properties.Resources.ResourceManager.GetObject("Bomb");
+						buttons[i][j].Image = (Image)MS.Properties.Resources.ResourceManager.GetObject("Mine");
 					}
 				}
 			}
@@ -375,6 +393,7 @@ namespace MS
 			MessageLabel.ForeColor = Color.Blue;
 		}
 
+		//if a blank space is clicked, then show all adjacent spaces with recursion
 		private void mapZeroSection(mButton b)
 		{
 			if (b.BackColor == SystemColors.ControlDarkDark)
@@ -585,6 +604,7 @@ namespace MS
 			}
 		}
 
+		//show button value and set color
 		private void setButtonText(mButton b)
 		{
 			int val = b.value;
@@ -638,12 +658,13 @@ namespace MS
 			}
 		}
 
+		//show that the user won the game and reveal all spaces/bombs
 		private void wonGame()
 		{
 			timer1.Stop();
 			MessageLabel.Text = "You won in " + sw.Elapsed.ToString(@"mm\:ss\!");
 			MessageLabel.ForeColor = Color.Green;
-			bombsLeftLabel.Text = "Bombs Left: 0";
+			minesLeftLabel.Text = "Mines Left: 0";
 
 			for (int i = 0; i < cols; i++)
 			{
@@ -659,15 +680,17 @@ namespace MS
 					}
 					else
 					{
-						buttons[i][j].Image = (Image)MS.Properties.Resources.ResourceManager.GetObject("Bomb");
+						buttons[i][j].Image = (Image)MS.Properties.Resources.ResourceManager.GetObject("Mine");
 					}
 				}
 			}
 		}
 
-		private void updateButtonFromBomb(mButton b)
+		//only used if a mine is clicked on the first click
+		//change button value from being a mine to however many mines it is touching
+		private void updateButtonFromMine(mButton b)
 		{
-			int bombCount = 0;
+			int mineCount = 0;
 
 			if (b.x == 0) //LEFT BORDER
 			{
@@ -682,7 +705,7 @@ namespace MS
 						if (buttons[t.Item1][t.Item2].value != -1)
 							buttons[t.Item1][t.Item2].value--;
 						else
-							bombCount++;
+							mineCount++;
 					}
 				}
 				else if (b.y == rows - 1) //BOTTOM BORDER
@@ -696,7 +719,7 @@ namespace MS
 						if (buttons[t.Item1][t.Item2].value != -1)
 							buttons[t.Item1][t.Item2].value--;
 						else
-							bombCount++;
+							mineCount++;
 					}
 				}
 				else //NO TOP/BOTTOM BORDER
@@ -712,14 +735,14 @@ namespace MS
 						if (buttons[t.Item1][t.Item2].value != -1)
 							buttons[t.Item1][t.Item2].value--;
 						else
-							bombCount++;
+							mineCount++;
 					}
 				}
 
 				if (buttons[b.x + 1][b.y].value != -1)
 					buttons[b.x + 1][b.y].value--;
 				else
-					bombCount++;
+					mineCount++;
 			}
 			else if (b.x == cols - 1) //RIGHT BORDER
 			{
@@ -734,7 +757,7 @@ namespace MS
 						if (buttons[t.Item1][t.Item2].value != -1)
 							buttons[t.Item1][t.Item2].value--;
 						else
-							bombCount++;
+							mineCount++;
 					}
 				}
 				else if (b.y == rows - 1) //BOTTOM BORDER
@@ -748,7 +771,7 @@ namespace MS
 						if (buttons[t.Item1][t.Item2].value != -1)
 							buttons[t.Item1][t.Item2].value--;
 						else
-							bombCount++;
+							mineCount++;
 					}
 				}
 				else //NO TOP/BOTTOM BORDER
@@ -764,14 +787,14 @@ namespace MS
 						if (buttons[t.Item1][t.Item2].value != -1)
 							buttons[t.Item1][t.Item2].value--;
 						else
-							bombCount++;
+							mineCount++;
 					}
 				}
 
 				if (buttons[b.x - 1][b.y].value != -1)
 					buttons[b.x - 1][b.y].value--;
 				else
-					bombCount++;
+					mineCount++;
 			}
 			else //NO LEFT/RIGHT BORDER
 			{
@@ -787,7 +810,7 @@ namespace MS
 						if (buttons[t.Item1][t.Item2].value != -1)
 							buttons[t.Item1][t.Item2].value--;
 						else
-							bombCount++;
+							mineCount++;
 					}
 
 				}
@@ -803,7 +826,7 @@ namespace MS
 						if (buttons[t.Item1][t.Item2].value != -1)
 							buttons[t.Item1][t.Item2].value--;
 						else
-							bombCount++;
+							mineCount++;
 					}
 				}
 				else //NO TOP/BOTTOM BORDER
@@ -821,22 +844,22 @@ namespace MS
 						if (buttons[t.Item1][t.Item2].value != -1)
 							buttons[t.Item1][t.Item2].value--;
 						else
-							bombCount++;
+							mineCount++;
 					}
 				}
 
 				if (buttons[b.x - 1][b.y].value != -1)
 					buttons[b.x - 1][b.y].value--;
 				else
-					bombCount++;
+					mineCount++;
 
 				if (buttons[b.x + 1][b.y].value != -1)
 					buttons[b.x + 1][b.y].value--;
 				else
-					bombCount++;
+					mineCount++;
 			}
 
-			b.value = bombCount;
+			b.value = mineCount;
 
 			if (b.value == 0)
 			{
@@ -844,9 +867,11 @@ namespace MS
 			}
 		}
 
-		private void updateButtonToBomb(mButton b)
+		//only used if a mine is clicked on the first click
+		//change a button to a mine and update adjacent buttons
+		private void updateButtonToMine(mButton b)
 		{
-			//set value to bomb value and update surrounding tiles
+			//set value to mine value and update surrounding tiles
 			b.value = -1;
 			
 			if (b.x == 0) //LEFT BORDER
@@ -990,10 +1015,11 @@ namespace MS
 			}
 		}
 
+		//only used if a mine is clicked on the first click
+		//move mine to top left corner if it is blank, unless user clicked top left corner or there is already a mine there
+		//otherwise search for first non-mine tile from left to right, up to down
 		private void moveMine(mButton b)
 		{
-			//move mine to top left corner if it is blank, unless user clicked top left corner or there is already a bomb there
-			//otherwise search for first non-bomb tile from left to right, up to down
 			if (b.x == 0 && b.y == 0)
 			{
 				//MessageBox.Show("7");
@@ -1003,7 +1029,7 @@ namespace MS
 					{
 						if (buttons[i][j].value != -1)
 						{
-							updateButtonToBomb(buttons[i][j]);
+							updateButtonToMine(buttons[i][j]);
 							return;
 						}
 					}
@@ -1018,7 +1044,7 @@ namespace MS
 						{
 							if (buttons[i][j].value != -1)
 							{
-								updateButtonToBomb(buttons[i][j]);
+								updateButtonToMine(buttons[i][j]);
 								return;
 							}
 						}
@@ -1042,14 +1068,69 @@ namespace MS
 			}
 		}
 
+		//handle new game options and custom limits
 		private void newGameButton_Click(object sender, EventArgs e)
 		{
-			newGame();
+			if (beginnerRB.Checked)
+			{
+				newGame(9, 9, 10);
+			} else if (intermediateRB.Checked)
+			{
+				newGame(16, 16, 40);
+			} else if (expertRB.Checked)
+			{
+				newGame(16, 30, 99);
+			} else if (customRB.Checked)
+			{
+				try
+				{
+					int rows = Convert.ToInt32(rowsBox.Text);
+					int columns = Convert.ToInt32(columnsBox.Text);
+					int mines = Convert.ToInt32(minesBox.Text);
+
+					if (rows < 1)
+						rows = 1;
+					else if (rows > 16)
+						rows = 16;
+
+					if (columns < 8)
+						columns = 8;
+					else if (columns > 30)
+						columns = 30;
+
+					if (mines >= (rows * columns - 1))
+						mines = rows * columns - 1;
+					else if (mines < 0)
+						mines = 0;
+
+					rowsBox.Text = rows.ToString();
+					columnsBox.Text = columns.ToString();
+					minesBox.Text = mines.ToString();
+
+					newGame(rows, columns, mines);
+				} catch
+				{
+					rowsBox.Text = "16";
+					columnsBox.Text = "30";
+					minesBox.Text = "99";
+					newGame(16, 30, 99);
+				}
+			}
 		}
 
+		//update timer label
 		private void timer1_Tick(object sender, EventArgs e)
 		{
 			timerLabel.Text = sw.Elapsed.ToString(@"mm\:ss");
+		}
+
+		//make custom options visible on click and invisible on other click
+		private void customRB_CheckedChanged(object sender, EventArgs e)
+		{
+			if (customRB.Checked)
+				customOptionsPanel.Visible = true;
+			else
+				customOptionsPanel.Visible = false;
 		}
 	}
 }
